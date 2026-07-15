@@ -1,0 +1,58 @@
+{
+ "_说明": "风格资产层:每个值都是「可以换的偏好」,不是规则。改这个文件=换成你自己的风格。",
+ "canvas": "1080x1920",
+ "caption": {
+  "font": "Hiragino Sans GB",
+  "size": 64,
+  "bottom_offset": 270,
+  "line_chars": null,
+  "safe_margin_px": 130,
+    "_line_chars注": "null=自动(竖屏13/横屏22);要覆盖就填数字。",
+  "emphasis_color": "#ffd60a",
+  "emphasis_scale": 1.22,
+  "word_pop": false,
+  "_注": "word_pop=false 是她的明确口味(整句静态,不逐词跳动);很多创作者喜欢逐词跳,开源版这是第一个该暴露的开关。安全区 130px 对应抖音/小红书右侧点赞栏,是平台通用值。"
+ },
+ "cards": {
+  "paper": "#ece2d0",
+  "ink": "#262019",
+  "accent": "#c4622d",
+  "highlight": "#ffd60a",
+  "max_per_60s": 5,
+  "animation": "spring",
+  "_注": "暖调纸卡(纸/赭/黄)是她的品牌感;max_per_60s=5 是经验值待更多样本验证。"
+ },
+ "audio": {
+  "lufs_target": -14,
+  "bgm_voice_vol": 0.11,
+  "bgm_lift_vol": 0.3,
+  "sfx_gain_db": -2,
+  "no_explosion_sfx": true,
+  "_注": "-14 LUFS 是平台通用标准(规则);其余是她的口味。爆炸音效她明确毙过。"
+ },
+ "pacing": {
+  "voice_speed": 1.12,
+  "demo_dead_speed": 8.0,
+  "demo_typing_speed": 3.0,
+  "demo_reveal_speed": 1.5,
+  "_注": "1.12 是她这个账号的节奏档(平台常态 1.0-1.25);演示三档阈值校准自她的录屏,新素材类型需重校。"
+ },
+ "takes": {
+  "policy": "last",
+  "_注": "重录取最后一遍=她的习惯,恰好也是行业默认(TimeBolt 同款);可选 last/first/ask。"
+ },
+ "speech": {
+  "filler_words": [
+   "然后"
+  ],
+  "ta_mode": "ai",
+  "_注": "口头禅清单是个人口癖,人各不同;ta_mode=ai(他→它)适合讲 AI 的内容,人物题材设 human。"
+ },
+ "endcard": {
+  "brand_name": "你的名字",
+  "brand_sub": "一句话介绍你自己",
+  "cta": "关注我",
+  "duration_s": 2.5,
+  "_注": "尾卡品牌信息,装完第一件事就是改这里"
+ }
+}

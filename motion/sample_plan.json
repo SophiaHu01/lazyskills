@@ -1,0 +1,55 @@
+{
+  "durationSec": 30,
+  "events": [
+    {
+      "type": "ChapterCard",
+      "start": 0.5,
+      "hold": 3,
+      "props": {"no": 2, "title": "开始复刻", "sub": "三步搭出同款动效"}
+    },
+    {
+      "type": "BigNumber",
+      "start": 4.5,
+      "hold": 3,
+      "props": {"value": 399, "unit": "元/月", "label": "商业工具订阅价"}
+    },
+    {
+      "type": "QuickChart",
+      "start": 8.5,
+      "hold": 3.5,
+      "props": {
+        "kind": "bar",
+        "unit": "元",
+        "items": [
+          {"label": "商业工具", "value": 399},
+          {"label": "剪辑会员", "value": 25},
+          {"label": "自建", "value": 0, "highlight": true}
+        ]
+      }
+    },
+    {
+      "type": "StepsTimeline",
+      "start": 13,
+      "hold": 4,
+      "props": {"steps": ["转录逐字稿", "标动画时刻", "渲染合成"], "active": 1}
+    },
+    {
+      "type": "Callout",
+      "start": 18,
+      "hold": 3,
+      "props": {"shape": "circle", "x": 0.5, "y": 0.32, "w": 0.42, "h": 0.13, "label": "看这里"}
+    },
+    {
+      "type": "ListReveal",
+      "start": 22,
+      "hold": 3.5,
+      "props": {"title": "为什么自建", "items": ["全免费本地跑", "风格自己定", "数据不出门"]}
+    },
+    {
+      "type": "QuoteCard",
+      "start": 26.5,
+      "hold": 3,
+      "props": {"text": "每个动画都值得被想过,而不是有个卡片就贴。", "by": "motion-rules"}
+    }
+  ]
+}

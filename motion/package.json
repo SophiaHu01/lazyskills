@@ -1,0 +1,21 @@
+{
+  "name": "lazyskills-motion",
+  "version": "0.1.0",
+  "private": true,
+  "description": "lazycut 动效组件库:Remotion 透明层 Motion Graphics,渲成 ProRes 4444 叠在竖屏口播视频上",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts VidMotion out/motion.mov --codec=prores --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.0"
+  },
+  "devDependencies": {
+    "@remotion/cli": "^4.0.0",
+    "@types/react": "^18.3.3",
+    "typescript": "^5.5.4"
+  }
+}
