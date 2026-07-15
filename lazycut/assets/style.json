@@ -7,11 +7,13 @@
   "bottom_offset": 270,
   "line_chars": null,
   "safe_margin_px": 130,
-    "_line_chars注": "null=自动(竖屏13/横屏22);要覆盖就填数字。",
+  "_line_chars注": "null=自动(竖屏13/横屏22);要覆盖就填数字。",
   "emphasis_color": "#ffd60a",
   "emphasis_scale": 1.22,
   "word_pop": false,
-  "_注": "word_pop=false 是她的明确口味(整句静态,不逐词跳动);很多创作者喜欢逐词跳,开源版这是第一个该暴露的开关。安全区 130px 对应抖音/小红书右侧点赞栏,是平台通用值。"
+  "_注": "word_pop=false 是她的明确口味(整句静态,不逐词跳动);很多创作者喜欢逐词跳,开源版这是第一个该暴露的开关。安全区 130px 对应抖音/小红书右侧点赞栏,是平台通用值。",
+  "draft_scale": 0.6,
+  "_draft_scale注": "剪辑器草稿里字幕文本的缩放(模板克隆常继承大标题字号,0.6=顺眼默认,嫌大调小)"
  },
  "cards": {
   "paper": "#ece2d0",

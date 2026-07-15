@@ -126,29 +126,73 @@ def run_stage(p, s):
     elif s == "captions":
         _run([sys.executable, f"{SCRIPTS}/build.py", p.cfgp("config")])
     elif s == "cards":
-        props = p.cfgp("props")
-        _run(["npx", "remotion", "render", "VidCaption", wd + "卡片层.mov", f"--props={props}",
-              "--codec=prores", "--prores-profile=4444", "--image-format=png",
-              "--pixel-format=yuva444p10le", "--log=error"],
-             cwd=os.path.expanduser(j["remotion_dir"]))
+        # 分段渲染(2026-07-14 立法:动画必须单段独立,用户在剪辑器里才能单独缩放/挪/删;
+        # 文件带版本号且旧版不删=秒级回滚)。输入 motion_plan.json {events:[{type,start,hold,props}]}
+        plan_p = wd + "motion_plan.json"
+        if not os.path.exists(plan_p):
+            print("  (无 motion_plan.json,跳过动效)")
+            return
+        plan = json.load(open(plan_p))
+        seg_dir = wd + "动效段/"
+        os.makedirs(seg_dir, exist_ok=True)
+        LEAD = 0.4   # 每段片头留的进场余量
+        canvas = plan.get("canvas", {"width": 1080, "height": 1920})
+        manifest = []
+        for i, ev in enumerate(plan.get("events", [])):
+            k = 1
+            while os.path.exists(seg_dir + f"ev{i:02d}_{ev['type']}_v{k}.mov"):
+                k += 1
+            out = seg_dir + f"ev{i:02d}_{ev['type']}_v{k}.mov"
+            dur = LEAD + ev["hold"] + 0.8
+            tmp = wd + f".ev{i}.props.json"
+            json.dump({"events": [dict(ev, start=LEAD)], "durationSec": round(dur, 2),
+                       "width": canvas["width"], "height": canvas["height"]},
+                      open(tmp, "w"), ensure_ascii=False)
+            _run(["npx", "remotion", "render", "VidMotion", out, f"--props={tmp}",
+                  "--codec=prores", "--prores-profile=4444", "--image-format=png",
+                  "--pixel-format=yuva444p10le", "--log=error"],
+                 cwd=os.path.expanduser(j.get("motion_dir",
+                     os.path.join(os.path.dirname(SCRIPTS), "..", "motion"))))
+            manifest.append({"file": out, "at": round(ev["start"] - LEAD, 3), "dur": dur,
+                             "type": ev["type"]})
+            os.remove(tmp)
+        json.dump(manifest, open(wd + "动效段manifest.json", "w"), ensure_ascii=False, indent=1)
+        print(f"  动效分段渲染 {len(manifest)} 段 → 动效段/(旧版本文件保留,回滚=换回旧文件)")
     elif s == "mix":
         ve, end, _ = _timeline(p)
         b = j.get("bgm", {})
         vv, lv = b.get("voice_vol", 0.11), b.get("lift_vol", 0.30)
         d = end + 0.05
-        fc = (f"[0:v][1:v]overlay=0:0:format=auto[v];"
-              f"[2:a][3:a][4:a][5:a]amix=inputs=4:duration=first:normalize=0,"
+        fc = (f"[1:a][2:a][3:a][4:a]amix=inputs=4:duration=first:normalize=0,"
               f"chorus=0.6:0.9:55:0.35:0.25:2,tremolo=f=0.35:d=0.25,lowpass=f=1600,"
               f"volume='{vv}+{lv - vv}*min(1,max(0,(t-{ve - 0.5})/1.2))':eval=frame,"
               f"afade=t=out:st={end - 1.4}:d=1.4[bed];[0:a][bed]amix=inputs=2:duration=first:normalize=0[a]")
-        _run(["ffmpeg", "-y", "-v", "error", "-i", wd + "final.mp4", "-i", wd + "卡片层.mov",
+        mani_p = wd + "动效段manifest.json"
+        if os.path.exists(mani_p):
+            mani = json.load(open(mani_p))
+            inputs = ["-i", wd + "final.mp4"]
+            for m in mani:
+                inputs += ["-i", m["file"]]
+            ov = "[0:v]null[v0];"
+            for k, m in enumerate(mani):
+                at = max(0, m["at"])
+                ov += (f"[{k+1}:v]setpts=PTS+{at}/TB[o{k}];"
+                       f"[v{k}][o{k}]overlay=0:0:format=auto:enable='between(t,{at},{at+m['dur']})'[v{k+1}];")
+            ov = ov.rstrip(";")
+            _run(["ffmpeg", "-y", "-v", "error"] + inputs +
+                 ["-filter_complex", ov, "-map", f"[v{len(mani)}]", "-map", "0:a",
+                  "-c:v", "libx264", "-crf", "19", "-preset", "veryfast", "-c:a", "copy",
+                  wd + "带卡.mp4"])
+            base_in = wd + "带卡.mp4"
+        else:
+            base_in = wd + "final.mp4"
+        _run(["ffmpeg", "-y", "-v", "error", "-i", base_in,
               "-f", "lavfi", "-i", f"sine=frequency=110:duration={d}",
               "-f", "lavfi", "-i", f"sine=frequency=164.81:duration={d}",
               "-f", "lavfi", "-i", f"sine=frequency=220:duration={d}",
               "-f", "lavfi", "-i", f"sine=frequency=329.63:duration={d}",
-              "-filter_complex", fc, "-map", "[v]", "-map", "[a]",
-              "-c:v", "libx264", "-crf", "19", "-preset", "veryfast",
-              "-c:a", "aac", "-b:a", "192k", wd + "带卡带底.mp4"])
+              "-filter_complex", fc, "-map", "0:v", "-map", "[a]",
+              "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", wd + "带卡带底.mp4"])
         _run([sys.executable, f"{SCRIPTS}/fx_pass.py", wd + "带卡带底.mp4",
               wd + j.get("out", "成片.mp4"), p.cfgp("fx")])
     elif s == "check":

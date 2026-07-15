@@ -270,7 +270,16 @@ def build_draft(template_dir, out_name, clips, captions, cards, cover_src=None):
         maxlen = int(style.get("caption", {}).get("line_chars", maxlen))
     except Exception:
         pass
-    csegs = [_text_seg(_balance_wrap(t, maxlen), s, e - s, -0.73, 14000 + i) for i, (s, e, t) in enumerate(captions)]
+    cap_scale = 0.6
+    try:
+        cap_scale = float(style.get("caption", {}).get("draft_scale", 0.6))
+    except Exception:
+        pass
+    csegs = []
+    for i, (cs, ce, t) in enumerate(captions):
+        seg = _text_seg(_balance_wrap(t, maxlen), cs, ce - cs, -0.73, 14000 + i)
+        seg["clip"]["scale"] = {"x": cap_scale, "y": cap_scale}  # 治「模板克隆继承大标题字号」:默认缩到0.6
+        csegs.append(seg)
     ksegs = [_text_seg(c["title"] + "\n" + "\n".join(c["sub"]), c["start"], c["hold"], 0.62, 15000 + i)
              for i, c in enumerate(cards)]
 
