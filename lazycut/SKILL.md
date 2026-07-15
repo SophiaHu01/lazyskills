@@ -101,6 +101,7 @@ style.json 的值或本机规则。**这是本 skill 和「参数固定的工具
 - **[reference/pipeline.md](reference/pipeline.md)** — 工具 API/配置/规约总册(按主题归类)。
 - **[reference/meaning-check.md](reference/meaning-check.md)** — 表意三层+接缝检查+多模态过审。
 - **[reference/overlay-rules.md](reference/overlay-rules.md)** — 卡片 vs 字幕强调立法。
+- **[reference/formats.md](reference/formats.md)** — 格式备案(输入/时间线/出口三类地图/平台标准,单一真相源)。
 - **[reference/defaults.md](reference/defaults.md)** / **[assets/style.json](assets/style.json)** — 参数与口味。
 - **[reference/command-howto.md](reference/command-howto.md)** — 命令 badge 文案(必须查实)。
 
