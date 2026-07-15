@@ -80,6 +80,8 @@ first testers get credited here.
 
 ## How to use
 
+**Absolute beginner?** Follow the illustrated [step-by-step tutorial](docs/tutorial.md).
+
 ```bash
 git clone https://github.com/SophiaHu01/lazyskills.git
 cd lazyskills/lazycut && python3 scripts/doctor.py
